@@ -29,3 +29,13 @@ function upload_3ds($mime_types){
     return $mime_types;
 }
 add_filter('upload_mimes', 'upload_3ds', 1, 1);
+
+/* Adds scripts */
+add_action( 'wp_enqueue_scripts', 'add_scripts' );
+function add_scripts() {
+    wp_enqueue_script( 'three', get_theme_file_uri( 'assets/js/three.js' ), array(), '20201005', true );
+    wp_enqueue_script( 'GLTFLoader', get_theme_file_uri( 'assets/js/GLTFLoader.js' ), array(), '20201005', true );
+    wp_enqueue_script( 'gsap', get_theme_file_uri( 'assets/js/gsap.min.js' ), array(), '20201005', true );
+    wp_enqueue_script( 'OrbitControls', get_theme_file_uri( 'assets/js/OrbitControls.js' ), array(), '20201005', true );
+    wp_enqueue_script( 'mythree', get_theme_file_uri( 'assets/js/mythree.js' ), array(), '20201005', true );
+}
