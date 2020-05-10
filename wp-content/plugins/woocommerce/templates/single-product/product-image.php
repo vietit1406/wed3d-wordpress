@@ -48,8 +48,11 @@ $wrapper_classes   = apply_filters(
 			$html .= '</div>';
 		}
 
+		$url3d = get_field('product_3d_model')['url'];
+		if(!empty($url3d)) {
+			echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', wc_get_gallery_image_html( null,false, [$url3d,100,100,1]), $attachment_id );
+		}
 		echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', $html, $post_thumbnail_id ); // phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
-
 		do_action( 'woocommerce_product_thumbnails' );
 		?>
 	</figure>
