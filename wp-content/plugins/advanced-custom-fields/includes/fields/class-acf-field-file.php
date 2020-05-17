@@ -81,6 +81,7 @@ class acf_field_file extends acf_field {
 		
 		// allow custom uploader
 		$uploader = acf_maybe_get($field, 'uploader', $uploader);
+//		echo $uploader;exit;
 		
 		
 		// enqueue
