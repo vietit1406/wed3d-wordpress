@@ -1461,7 +1461,7 @@ if ( ! function_exists( 'woocommerce_show_product_thumbnails' ) ) {
 
 function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,$model3DUrl=null) {
     if(!empty($model3DUrl)){
-        return '<div data-thumb="' . esc_url( $model3DUrl[0] ) . '" data-thumb-alt="' . esc_attr( 'test' ) . '" class="woocommerce-product-gallery__image"><a href="' . esc_url( $model3DUrl[0] ) . '">' . 'image name' . '</a></div>';
+        return '<div data-thumb="' . esc_url($model3DUrl[0]) . '" data-thumb-alt="' . esc_attr('3D-MODEL') . '" class="woocommerce-product-gallery__image"><a id="my3DUrl"href="' . esc_url($model3DUrl[0]) . '">' . 'image name' . '</a></div>';
 
     }else{
         $flexslider        = (bool) apply_filters( 'woocommerce_single_product_flexslider_enabled', get_theme_support( 'wc-product-gallery-slider' ) );
