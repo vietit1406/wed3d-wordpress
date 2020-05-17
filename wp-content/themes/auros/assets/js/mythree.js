@@ -7,7 +7,7 @@
 
 jQuery(document).ready(function () {
     var url3D = jQuery('#my3DUrl').attr('href');
-    var url3D = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/39255/ladybug.gltf';
+    var url3D = 'Heart_Cone_Chair.gltf';
     setTimeout(function () {
         var myWidth = jQuery('#my3DUrl').parent().width();
         console.log(myWidth);
