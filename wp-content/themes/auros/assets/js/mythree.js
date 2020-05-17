@@ -5,7 +5,12 @@
 //     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
 
 
-jQuery( document ).ready(function() {
+jQuery(document).ready(function () {
+    var url3D = jQuery('#my3DUrl').attr('href');
+    var url3D = 'Heart_Cone_Chair.gltf';
+    setTimeout(function () {
+        var myWidth = jQuery('#my3DUrl').parent().width();
+        console.log(myWidth);
     const backgroundColor = 0x000000;
 
     /*////////////////////////////////////////*/
@@ -23,10 +28,12 @@ jQuery( document ).ready(function() {
 
     var camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 800 );
     camera.position.set(5,5,5);
-    const canvas = document.getElementById('#product-1192');
-    var renderer = new THREE.WebGLRenderer( { canvas,antialias: true } );
+        const canvas = document.querySelector('#my3DUrl');
+        // const canvas = document.getElementById('my3DUrl');
+        var renderer = new THREE.WebGLRenderer({antialias: true});
+
     renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize(myWidth, myWidth);
     renderer.setClearColor( backgroundColor );//0x );
 
     renderer.toneMapping = THREE.LinearToneMapping;
@@ -40,7 +47,9 @@ jQuery( document ).ready(function() {
         renderer.setSize( window.innerWidth, window.innerHeight );
     }, false );
 
-    document.body.appendChild( renderer.domElement);
+        // document.body.appendChild( renderer.domElement);
+        // document.body.$(canvas);
+        jQuery('body').find('#my3DUrl').html(renderer.domElement);
 
     function renderScene(){ renderer.render( scene, camera ); }
     renderCalls.push(renderScene);
@@ -86,11 +95,11 @@ jQuery( document ).ready(function() {
 
     var loader = new THREE.GLTFLoader();
     loader.crossOrigin = true;
-    loader.load( 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/39255/ladybug.gltf', function ( data ) {
+        loader.load(url3D, function (data) {
 
 
         var object = data.scene;
-        object.position.set(0, -10, -0.75);
+            object.position.set(-1, -11, -0.75); //X, Y , Z
 //     object.rotation.set(Math.PI / -2, 0, 0);
 
 //     TweenLite.from( object.rotation, 1.3, {
@@ -98,14 +107,100 @@ jQuery( document ).ready(function() {
 //       ease: 'Power3.easeOut'
 //     });
 
-        TweenMax.from( object.position, 3, {
-            y: -8,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Power2.easeInOut'
-        });
+            // TweenMax.from( object.position, 3, {
+            //     y: -8,
+            //     yoyo: true,
+            //     repeat: -1,
+            //     ease: 'Power2.easeInOut'
+            // });
         //object.position.y = - 95;
         scene.add( object );
         //, onProgress, onError );
     });
+
+    }, 2000);
+    // function main() {
+    //     const canvas = document.querySelector('#my3DUrl');
+    //     const renderer = new THREE.WebGLRenderer({
+    //         canvas,
+    //         alpha: true,
+    //     });
+    //
+    //     const fov = 75;
+    //     const aspect = 2;  // the canvas default
+    //     const near = 0.1;
+    //     const far = 5;
+    //     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    //     camera.position.z = 2;
+    //
+    //     const scene = new THREE.Scene();
+    //
+    //     {
+    //         const color = 0xFFFFFF;
+    //         const intensity = 1;
+    //         const light = new THREE.DirectionalLight(color, intensity);
+    //         light.position.set(-1, 2, 4);
+    //         scene.add(light);
+    //     }
+    //
+    //     const boxWidth = 1;
+    //     const boxHeight = 1;
+    //     const boxDepth = 1;
+    //     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+    //
+    //     function makeInstance(geometry, color, x) {
+    //         const material = new THREE.MeshPhongMaterial({color});
+    //
+    //         const cube = new THREE.Mesh(geometry, material);
+    //         scene.add(cube);
+    //
+    //         cube.position.x = x;
+    //
+    //         return cube;
+    //     }
+    //
+    //     const cubes = [
+    //         makeInstance(geometry, 0x44aa88,  0),
+    //         makeInstance(geometry, 0x8844aa, -2),
+    //         makeInstance(geometry, 0xaa8844,  2),
+    //     ];
+    //
+    //     function resizeRendererToDisplaySize(renderer) {
+    //         const canvas = renderer.domElement;
+    //         const width = canvas.clientWidth;
+    //         const height = canvas.clientHeight;
+    //         const needResize = canvas.width !== width || canvas.height !== height;
+    //         if (needResize) {
+    //             renderer.setSize(width, height, false);
+    //         }
+    //         return needResize;
+    //     }
+    //
+    //     function render(time) {
+    //         time *= 0.001;
+    //
+    //         if (resizeRendererToDisplaySize(renderer)) {
+    //             const canvas = renderer.domElement;
+    //             camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    //             camera.updateProjectionMatrix();
+    //         }
+    //
+    //         cubes.forEach((cube, ndx) => {
+    //             const speed = 1 + ndx * .1;
+    //             const rot = time * speed;
+    //             cube.rotation.x = rot;
+    //             cube.rotation.y = rot;
+    //         });
+    //
+    //         renderer.render(scene, camera);
+    //
+    //         requestAnimationFrame(render);
+    //     }
+    //
+    //     requestAnimationFrame(render);
+    // }
+    //
+    // main();
+
+
 });
