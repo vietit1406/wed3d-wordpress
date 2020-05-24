@@ -27,7 +27,7 @@ jQuery(document).ready(function () {
     var scene = new THREE.Scene();
 
     var camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 800 );
-    camera.position.set(5,5,5);
+        camera.position.set(5, 5, 5);
         const canvas = document.querySelector('#my3DUrl');
         // const canvas = document.getElementById('my3DUrl');
         var renderer = new THREE.WebGLRenderer({antialias: true});
@@ -92,13 +92,12 @@ jQuery(document).ready(function () {
     /* ////////////////////////////////////////////////////////////////////////// */
 
 
-
-    var loader = new THREE.GLTFLoader();
-    loader.crossOrigin = true;
+        var loader = new THREE.GLTFLoader();
+        loader.crossOrigin = true;
         loader.load(url3D, function (data) {
 
 
-        var object = data.scene;
+            var object = data.scene;
             object.position.set(-1, -11, -0.75); //X, Y , Z
 //     object.rotation.set(Math.PI / -2, 0, 0);
 
@@ -113,10 +112,10 @@ jQuery(document).ready(function () {
             //     repeat: -1,
             //     ease: 'Power2.easeInOut'
             // });
-        //object.position.y = - 95;
+            //object.position.y = - 95;
         scene.add( object );
-        //, onProgress, onError );
-    });
+            //, onProgress, onError );
+        });
 
     }, 2000);
     // function main() {
