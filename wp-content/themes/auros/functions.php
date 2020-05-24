@@ -34,9 +34,6 @@ function my_acf_save_post($post_id)
     $product_3d_model = get_field('product_3d_model', $post_id);
     if ($product_3d_model) {
         $value = get_field("product_3d_model", $post_id);
-        echo '<pre>';
-        var_dump($value['url']);
-        var_dump($value);
         $my_file_dir = get_home_path() . str_replace(get_site_url(), '', $value['url']);
         $zip = new ZipArchive;
         $res = $zip->open($my_file_dir);
@@ -46,20 +43,29 @@ function my_acf_save_post($post_id)
         } else {
         }
     }
-    exit;
 }
 
 // add the action
 add_action('woocommerce_update_product', 'action_woocommerce_update_product', 10, 1);
 
-
-function upload_3ds($mime_types){
-    $mime_types['3ds'] = 'application/x-3ds';
-//    $mime_types['glb'] = 'model/gltf-binary';
-    $mime_types['gltf'] = 'model/gltf-binary';
-    return $mime_types;
+// Fixing Wordpress MIME checking system
+function fix_wp_csv_mime_bug( $data, $file, $filename, $mimes ) {
+    $wp_filetype = wp_check_filetype( $filename, $mimes );
+    $ext = $wp_filetype['ext'];
+    $type = $wp_filetype['type'];
+    $proper_filename = $data['proper_filename'];
+    return compact( 'ext', 'type', 'proper_filename' );
 }
-add_filter('upload_mimes', 'upload_3ds', 1, 1);
+add_filter( 'wp_check_filetype_and_ext', 'fix_wp_csv_mime_bug', 10, 4 );
+
+// Adding custom MIME types
+function custom_upload_mimes ( $existing_mimes=array() ) {
+    $existing_mimes['3ds'] = 'application/x-3ds';
+    $existing_mimes['gltf'] = 'image/gltf';
+    $existing_mimes['glb'] = 'image/glb';
+    return $existing_mimes;
+}
+add_filter('upload_mimes', 'custom_upload_mimes');
 
 /* Adds scripts */
 add_action( 'wp_enqueue_scripts', 'add_scripts' );

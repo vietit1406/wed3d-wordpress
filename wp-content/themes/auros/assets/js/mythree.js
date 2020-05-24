@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
     var scene = new THREE.Scene();
 
     var camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 800 );
-        camera.position.set(1, 1, 1);
+    camera.position.set(1,1,1);
         const canvas = document.querySelector('#my3DUrl');
         // const canvas = document.getElementById('my3DUrl');
         var renderer = new THREE.WebGLRenderer({antialias: true});
@@ -93,27 +93,27 @@ jQuery(document).ready(function () {
     scene.add( light2 );
 
     /* ////////////////////////////////////////////////////////////////////////// */
-        var loader = new THREE.TDSLoader();
-        var normal = loader.load(url3DDirPath);
+    var loader =new THREE.TDSLoader();
+    var normal = loader.load( url3DDirPath);
 
         // loader.crossOrigin = true;
-        loader.setResourcePath(url3DDirPath + '/');
-        loader.load(url3D, function (object) {
-            object.rotation.setFromRotationMatrix(object.matrix);
-            object.position.set(-1, 0, -0.75); //X, Y , Z
-            object.traverse(function (child) {
+    loader.setResourcePath( url3DDirPath+'/');
+    loader.load( url3D, function ( object ) {
+        object.rotation.setFromRotationMatrix(object.matrix);
+        object.position.set(-1, 0, -0.75); //X, Y , Z
+        object.traverse( function ( child ) {
 
-                if (child.isMesh) {
+            if ( child.isMesh ) {
 
-                    child.material.normalMap = normal;
+                child.material.normalMap = normal;
 
-                }
+            }
 
-            });
+        } );
 
-            scene.add( object );
+        scene.add( object );
 
-        });
+    } );
 
     }, 2000);
 
