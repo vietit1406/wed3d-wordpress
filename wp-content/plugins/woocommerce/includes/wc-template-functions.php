@@ -1462,10 +1462,8 @@ if ( ! function_exists( 'woocommerce_show_product_thumbnails' ) ) {
 function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,$model3DUrl=null) {
     if(!empty($model3DUrl)){
     	$path3ds = glob("public/uploads/unzip_3ds_file/".$model3DUrl['id']."/".$model3DUrl['name']."/*.3ds")[0];
-        return ' <div id="">
-                    <div id="3dChangeBackgroundColor">
-                      <a style="margin-left: 16px;" href="#">Change Background Color</a>
-                    </div>
+        return ' <div>
+                      <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>
                  </div>
   <div data-thumb="' . esc_url($model3DUrl[0]) . '" data-thumb-alt="' . esc_attr('3D-MODEL') . '" class="woocommerce-product-gallery__image"><a id="my3DUrl"  data-dir="' . esc_url($model3DUrl['dir']) . '" href="' . esc_url($model3DUrl['dir']) . '/' . pathinfo($path3ds)['basename'] . '">' . 'image name' . '</a></div>';
 

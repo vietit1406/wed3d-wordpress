@@ -26,16 +26,18 @@ define( 'DB_NAME', 'web3d' );
 define( 'DB_USER', 'root' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'admin' );
+define('DB_PASSWORD', '');
 
 /** MySQL hostname */
-define( 'DB_HOST', 'localhost' );
+define('DB_HOST', 'localhost:3306');
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );
 
 /** The Database Collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
+define('WP_HOME', 'http://ww.ww');
+define('WP_SITEURL', 'http://ww.ww');
 
 /**#@+
  * Authentication Unique Keys and Salts.
@@ -54,7 +56,7 @@ define( 'AUTH_SALT',        'wgP~5M!}I901Y7Wh$82$&VOZju6A-e7S]NK.Z*6yQHc#Aw,I$RR
 define( 'SECURE_AUTH_SALT', 'GFd5^UmF}|$$Yx?>=7,h{^;Sx}:Q#UfAu<t }6LC1%Ey7X/P?D6=p^H5,z&7T8s&' );
 define( 'LOGGED_IN_SALT',   '3+uGdTX8]& (yYklYemuM|{uKS%,[H?+xl4:QF#MCD@K^fbMA6lp$HFjXEjbwwjO' );
 define( 'NONCE_SALT',       'L[])<.<Wl{`gEO[iztav3T!pLQ`YzsG+>|[;<@mn-1nq2Pf?Lj8P&HM2-}>nrlU$' );
-
+define('ALLOW_UNFILTERED_UPLOADS', true);
 /**#@-*/
 
 /**

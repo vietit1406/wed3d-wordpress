@@ -4796,7 +4796,7 @@ body.archive .site-content {
 }
 .single-product div.product .woocommerce-product-gallery .woocommerce-product-gallery__trigger {
   position: absolute;
-  top: 10px;
+  /*top: 10px;*/
   right: 25px;
   display: block;
   height: 2em;
@@ -4807,6 +4807,10 @@ body.archive .site-content {
 }
 .single-product div.product .woocommerce-product-gallery img {
   margin: 0;
+}
+
+.flex-viewport {
+  /*height:auto !important;*/
 }
 .single-product div.product .woocommerce-product-gallery .flex-viewport {
   flex: 0 0 calc(100% - 107px);
