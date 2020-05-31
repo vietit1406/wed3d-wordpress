@@ -8,13 +8,10 @@
 jQuery(document).ready(function () {
     var url3D = jQuery('#my3DUrl').attr('href');
     var url3DDirPath = jQuery('#my3DUrl').data('dir');
-    console.log(url3DDirPath);
-
-    // var url3D = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/39255/ladybug.gltf';
+    // jQuery('#my3DUrl').css({'overflow':'visible'});
     setTimeout(function () {
         var myWidth = jQuery('#my3DUrl').parent().width();
-        console.log(myWidth);
-    const backgroundColor = 0x000000;
+        // console.log(myWidth);
 
     /*////////////////////////////////////////*/
 
@@ -32,13 +29,11 @@ jQuery(document).ready(function () {
     var camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 800 );
     camera.position.set(1,1,1);
         const canvas = document.querySelector('#my3DUrl');
-        // const canvas = document.getElementById('my3DUrl');
         var renderer = new THREE.WebGLRenderer({antialias: true});
 
     renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize(myWidth, myWidth);
-    renderer.setClearColor( backgroundColor );//0x );
-
+        scene.background = new THREE.Color(0xf0f0f0); // UPDATED
     renderer.toneMapping = THREE.LinearToneMapping;
     renderer.toneMappingExposure = Math.pow( 0.94, 5.0 );
     renderer.shadowMap.enabled = true;
@@ -58,13 +53,12 @@ jQuery(document).ready(function () {
     renderCalls.push(renderScene);
 
     /* ////////////////////////////////////////////////////////////////////////// */
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-    var controls = new THREE.OrbitControls( camera );
+        controls.rotateSpeed = 0.2;
+        controls.zoomSpeed = 0.5;
 
-    controls.rotateSpeed = 0.3;
-    controls.zoomSpeed = 0.9;
-
-    controls.minDistance = 3;
+        controls.minDistance = 2;
     controls.maxDistance = 20;
 
     controls.minPolarAngle = 0; // radians
@@ -77,11 +71,10 @@ jQuery(document).ready(function () {
         controls.update()
     });
 
-
     /* ////////////////////////////////////////////////////////////////////////// */
-    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    var cube = new THREE.Mesh( geometry, material );
+        // var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        // var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        // var cube = new THREE.Mesh( geometry, material );
     // scene.add( cube );
 
     var light = new THREE.PointLight( 0xffffcc, 20, 200 );
@@ -94,27 +87,39 @@ jQuery(document).ready(function () {
 
     /* ////////////////////////////////////////////////////////////////////////// */
     var loader =new THREE.TDSLoader();
-    var normal = loader.load( url3DDirPath);
+        // var normal = loader.load(url3DDirPath); // Unable as has a bug
 
         // loader.crossOrigin = true;
     loader.setResourcePath( url3DDirPath+'/');
     loader.load( url3D, function ( object ) {
-        object.rotation.setFromRotationMatrix(object.matrix);
-        object.position.set(-1, 0, -0.75); //X, Y , Z
+        object.rotation.x -= Math.PI / 2;
+        // object.rotation.setFromRotationMatrix(object.matrix);
+        object.position.set(0, 0, 0); //X, Y , Z
         object.traverse( function ( child ) {
-
             if ( child.isMesh ) {
+                // child.material.normalMap = normal; // Unable as has a bug
+            }
+        } );
+        scene.add( object );
+    });
 
-                child.material.normalMap = normal;
+        //Show x,y,z
+        // axes2 = new THREE.AxisHelper( 50 );
+        // scene.add( axes2 );
 
+
+        //    Event Change Background Color
+        jQuery('#3dChangeBackgroundColor').on('click', function () {
+            let sceneBg = scene.background;
+            if (sceneBg.b || sceneBg.r || sceneBg.g) {
+                scene.background = new THREE.Color(0x000000); // UPDATED
+            } else {
+                scene.background = new THREE.Color(0xf0f0f0); // UPDATED
             }
 
-        } );
-
-        scene.add( object );
-
-    } );
-
-    }, 2000);
+        });
+    }, 1000);
+    // jQuery('.flex-viewport').focus();
+    // console.log(jQuery('.flex-viewport').css());
 
 });
