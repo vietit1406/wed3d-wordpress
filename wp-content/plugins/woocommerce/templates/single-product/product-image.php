@@ -47,9 +47,6 @@ $wrapper_classes   = apply_filters(
 			$html .= sprintf( '<img src="%s" alt="%s" class="wp-post-image" />', esc_url( wc_placeholder_img_src( 'woocommerce_single' ) ), esc_html__( 'Awaiting product image', 'woocommerce' ) );
 			$html .= '</div>';
 		}
-
-//		$url3d = get_field('product_3d_model')['url'];
-//		echo "<pre>";
         $url3d=get_site_url()."/public/uploads/unzip_3ds_file/".get_field('product_3d_model')['ID']."/".get_field('product_3d_model')['name'];
         $idProduct=get_field('product_3d_model')['ID'];
 		if(!empty($url3d)) {

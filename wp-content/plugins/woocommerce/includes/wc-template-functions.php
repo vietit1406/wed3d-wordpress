@@ -1461,6 +1461,7 @@ if ( ! function_exists( 'woocommerce_show_product_thumbnails' ) ) {
 
 function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,$model3DUrl=null) {
     if(!empty($model3DUrl)){
+//        
     	$path3ds = glob("public/uploads/unzip_3ds_file/".$model3DUrl['id']."/".$model3DUrl['name']."/*.3ds")[0];
         return ' <div>
                       <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>

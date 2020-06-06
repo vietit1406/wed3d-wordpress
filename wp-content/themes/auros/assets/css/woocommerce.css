@@ -4766,6 +4766,8 @@ body.archive .site-content {
     flex: 0 0 50%;
     max-width: 50%;
   }
+
+  /*  */
 }
 @media (min-width: 1200px) {
   .single-product div.product .images {

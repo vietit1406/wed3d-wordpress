@@ -115,5 +115,6 @@ jQuery(document).ready(function ($) {
         });
         $('.flex-viewport').css('height', 'auto');
     }, 500);
+//
 });
 
