@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+    if($('.woocommerce-product-gallery').length) {
     var url3D = $('#my3DUrl').attr('href');
     var url3DDirPath = $('#my3DUrl').data('dir');
     setTimeout(function () {
@@ -116,6 +117,7 @@ jQuery(document).ready(function ($) {
         });
         $('.flex-viewport').css('height', 'auto');
     }, 500);
+    }
 //
 });
 
