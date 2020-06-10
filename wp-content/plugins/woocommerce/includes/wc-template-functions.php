@@ -1466,6 +1466,7 @@ function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,
         return ' <div>
                       <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>
                  </div>
+                 <div>
                       <br>
                       <a id="3dPauseCameraControl" href="#">Change 3D Position</a>
                       <div class="controls"><div id="js-tray" class="tray"><div id="js-tray-slide" class="tray__slide"></div></div></div>

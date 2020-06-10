@@ -1,13 +1,5 @@
 
-* {
-    touch-action: manipulation;
-}
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
 
 .frame {
     top: 0;
