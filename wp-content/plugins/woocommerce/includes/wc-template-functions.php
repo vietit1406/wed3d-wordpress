@@ -1465,7 +1465,15 @@ function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,
     	$path3ds = glob("public/uploads/unzip_3ds_file/".$model3DUrl['id']."/".$model3DUrl['name']."/*.3ds")[0];
         return ' <div>
                       <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>
+<<<<<<< Updated upstream
                  </div>
+=======
+                      <br>
+                      <a id="3dPauseCameraControl" href="#">Change 3D Position</a>
+                      <div class="controls"><div id="js-tray" class="tray"><div id="js-tray-slide" class="tray__slide"></div></div></div>
+                 </div>
+                 
+>>>>>>> Stashed changes
   <div data-thumb="'.get_site_url().'/wp-content/themes/auros/assets/images/3d-design.png" data-thumb-alt="' . esc_attr('3D-MODEL') . '" class="woocommerce-product-gallery__image"><a id="my3DUrl"  data-dir="' . esc_url($model3DUrl['dir']) . '" href="' . esc_url($model3DUrl['dir']) . '/' . pathinfo($path3ds)['basename'] . '">' . 'image name' . '</a></div>';
 
     }else{
