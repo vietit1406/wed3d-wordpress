@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+    if($('.woocommerce-product-gallery').length) {
     var url3D = $('#my3DUrl').attr('href');
     var url3DDirPath = $('#my3DUrl').data('dir');
     setTimeout(function () {
@@ -19,14 +20,14 @@ jQuery(document).ready(function ($) {
 
         var scene = new THREE.Scene();
 
-        var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 800);
+        var camera = new THREE.PerspectiveCamera(80, myWidth / myWidth*2, 0.1, 800);
         camera.position.set(1, 1, 1);
         const canvas = document.querySelector('#my3DUrl');
         var renderer = new THREE.WebGLRenderer({antialias: true});
 
         renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(myWidth, myWidth);
-        scene.background = new THREE.Color(0xf0f0f0); // UPDATED
+        renderer.setSize(myWidth, myWidth/2);
+        scene.background = new THREE.Color(0xffffff); // UPDATED
         renderer.toneMapping = THREE.LinearToneMapping;
         renderer.toneMappingExposure = Math.pow(0.94, 5.0);
         renderer.shadowMap.enabled = true;
@@ -105,16 +106,18 @@ jQuery(document).ready(function ($) {
 
         //    Event Change Background Color
         $('#3dChangeBackgroundColor').on('click', function () {
-            let sceneBg = scene.background;
-            if (sceneBg.b || sceneBg.r || sceneBg.g) {
-                scene.background = new THREE.Color(0x000000); // UPDATED
-            } else {
-                scene.background = new THREE.Color(0xf0f0f0); // UPDATED
-            }
+            var currentColor = scene.background;
+            var secondaryColor = new THREE.Color(0xffffff);
 
+            if ( JSON.stringify(currentColor) == JSON.stringify(secondaryColor) ) {
+                scene.background = new THREE.Color('dimgray'); // UPDATED
+            } else {
+                scene.background = new THREE.Color(0xffffff); // UPDATED
+            }
         });
         $('.flex-viewport').css('height', 'auto');
     }, 500);
+    }
 //
 });
 

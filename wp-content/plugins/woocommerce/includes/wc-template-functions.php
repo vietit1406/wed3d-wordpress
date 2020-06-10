@@ -1466,7 +1466,7 @@ function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,
         return ' <div>
                       <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>
                  </div>
-  <div data-thumb="' . esc_url($model3DUrl[0]) . '" data-thumb-alt="' . esc_attr('3D-MODEL') . '" class="woocommerce-product-gallery__image"><a id="my3DUrl"  data-dir="' . esc_url($model3DUrl['dir']) . '" href="' . esc_url($model3DUrl['dir']) . '/' . pathinfo($path3ds)['basename'] . '">' . 'image name' . '</a></div>';
+  <div data-thumb="'.get_site_url().'/wp-content/themes/auros/assets/images/3d-design.png" data-thumb-alt="' . esc_attr('3D-MODEL') . '" class="woocommerce-product-gallery__image"><a id="my3DUrl"  data-dir="' . esc_url($model3DUrl['dir']) . '" href="' . esc_url($model3DUrl['dir']) . '/' . pathinfo($path3ds)['basename'] . '">' . 'image name' . '</a></div>';
 
     }else{
         $flexslider        = (bool) apply_filters( 'woocommerce_single_product_flexslider_enabled', get_theme_support( 'wc-product-gallery-slider' ) );
