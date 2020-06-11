@@ -4812,7 +4812,7 @@ body.archive .site-content {
 }
 
 .flex-viewport {
-  /*height:auto !important;*/
+  height:auto !important;
 }
 .single-product div.product .woocommerce-product-gallery .flex-viewport {
   flex: 0 0 calc(100% - 107px);

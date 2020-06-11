@@ -84,3 +84,13 @@ function wpdocs_theme_name_scripts() {
 //    wp_enqueue_style( 'three-style', get_stylesheet_uri( 'assets/css/three-style.css' ), array(), '20201005', true );
 }
 add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
+
+
+//Get User's Product Design Json pass to all view
+add_action('init', 'get_user_product_design_json_function');
+function get_user_product_design_json_function()
+{
+    $productDesignByUser = _wp_get_current_user()->data->product_design_json;
+    add_filter('init', 'productDesignByUser' . $productDesignByUser);
+}
+//End get_user_product_design_json_function----------------------------------

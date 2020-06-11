@@ -1466,9 +1466,11 @@ function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,
         return ' <div>
                       <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>
                  </div>
-                 <div>
+                 <div class="info__message">
+		            <span><strong>&nbsp;Grab&nbsp;</strong> to rotate object. <strong>&nbsp;Scroll&nbsp;</strong> to zoom. <strong>&nbsp;Drag&nbsp;</strong> to move camera.</span>
+		        </div>
+                 <div style="height: 0;display:none;">
                       <br>
-                      <a id="3dPauseCameraControl" href="#">Change 3D Position</a>
                       <div class="controls"><div id="js-tray" class="tray"><div id="js-tray-slide" class="tray__slide"></div></div></div>
                  </div>
                  
