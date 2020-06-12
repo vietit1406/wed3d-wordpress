@@ -79,18 +79,60 @@ function add_scripts() {
     wp_enqueue_style('three-styles', get_template_directory_uri() . '/assets/css/three-style.css', array(), filemtime(get_template_directory() . '/assets/css/three-style.css'), false);
 
 }
+wp_localize_script( 'wp-api', 'wpApiSettings', array(
+    'root' => esc_url_raw( rest_url() ),
+    'nonce' => wp_create_nonce( 'wp_rest' )
+) );
 function wpdocs_theme_name_scripts() {
 //    wp_enqueue_style( 'style-name', get_stylesheet_uri('assets/css/three-style.css') );
 //    wp_enqueue_style( 'three-style', get_stylesheet_uri( 'assets/css/three-style.css' ), array(), '20201005', true );
 }
-add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
-
-
-//Get User's Product Design Json pass to all view
-add_action('init', 'get_user_product_design_json_function');
-function get_user_product_design_json_function()
-{
-    $productDesignByUser = _wp_get_current_user()->data->product_design_json;
-    add_filter('init', 'productDesignByUser' . $productDesignByUser);
+add_action( 'rest_api_init', 'add_custom_fields' );
+function add_custom_fields() {
+    register_rest_field(
+        'user',
+        'product_design_json', //New Field Name in JSON RESPONSEs
+        array(
+            'get_callback'    => 'add_custom_user_field', // custom function name
+            'update_callback' => 'post_user_product_design_json_api',
+            'schema'          => null,
+        )
+    );
 }
-//End get_user_product_design_json_function----------------------------------
+function add_custom_user_field() {
+//your code goes here
+    $userData = WP_User::get_data_by('id', 1);
+    return $userData->product_design_json;
+}
+
+function post_user_product_design_json_api()
+{
+    try{
+//Prepare params
+        if(!empty($_POST['product_design_json']) AND !empty($_POST['user_id'])){
+            $productDesignJson = $_POST['product_design_json'];
+            $userId = $_POST['user_id'];
+        }else{
+            throw new Exception('Invalid input params');
+        }
+
+//Excute query
+        global $wpdb;
+        $wpdb->query(
+            $wpdb->query(
+                $wpdb->prepare( "
+                UPDATE $wpdb->users 
+                SET product_design_json = %s 
+                WHERE ID = %d",
+                    $productDesignJson,
+                    $userId
+                )
+            )
+        );
+
+    }catch (Exception $e){
+        echo json_encode(array('status' => 1, 'msg' => "Error ".$e));
+    }
+        echo json_encode(array('status' => -1, 'msg' => "Success"));
+    exit;
+}
