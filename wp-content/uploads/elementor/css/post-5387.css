@@ -1,0 +1,148 @@
+/* Start custom CSS for wp-widget-woocommerce_widget_cart, class: .elementor-element-3ea6d23 */.hidden {
+    display: none;
+}/* End custom CSS */
+/* Start custom CSS for html, class: .elementor-element-0b1c03e */.preview-cart .st1{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+.preview-cart li{list-style-type: none;}
+.preview-cart a:hover{cursor: pointer;}
+.preview-cart p{
+  text-transform:uppercase;
+  font-family: Arial;
+  font-size: 10.5px;
+  margin: 0px;
+  text-align: center;
+  font-weight: 800;
+}
+.preview-cart .title h5{  
+    margin: 0px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: Arial;
+    font-size: 1.5em;
+    margin: 0 auto;
+    color: #CAA8F5;
+    padding: 20px 0;
+    border-bottom: 3px solid #230C33;
+}
+.preview-cart .nav-wrapper{
+  position:relative;
+  left: 0;
+  top: 0;
+  transition:  all .25s ease-out;
+  background: rgba(35, 12, 51, .5 );
+  padding-top: 0px;
+  height: 100%;
+  width: 250px;
+  transform: translate3d(0, 0, 0);
+  transition:  all .4s ease;
+}
+.preview-cart ul{
+  padding:0px;
+}
+
+.preview-cart button{
+  width: 80%;
+  padding: 10px 0px;
+  background: transparent;
+   display: block; 
+  margin: 0 auto;
+  margin-bottom: 10px;
+  border: 2px solid #230C33;
+  color: #230C33;
+}
+
+.preview-cart button:hover{
+    cursor: pointer;
+    border: 2px solid #fff;
+    color: #CAA8F5;
+} 
+.preview-cart button.active button{
+  color: #CAA8F5;
+  border: 2px solid #fff;
+}
+.preview-cart ul li a{
+    color: #230C33;
+    -webkit-transition: all 1.5s;
+    transition: all .5s;
+}
+
+.preview-cart ul li svg{
+    stroke: #230C33;
+    width: 45px;
+    display: block;
+    margin: 0 auto;
+    fill:transparent;
+    stroke-width: 2.5px;
+    -webkit-transition: all .25s;
+    transition: all .25s;
+}
+.preview-cart ul li:hover a{
+      color: #CAA8F5;
+    -webkit-transition: all .25s;
+    transition: all .25s;
+}
+    
+.preview-cart ul li:hover svg{
+  stroke: #000;
+  transform: translateY(-10px);
+  -webkit-transition: all .25s;
+  transition: all .25s;
+}
+.preview-cart ul li .toggle.selected{
+       color: #CAA8F5;
+}
+
+.preview-cart ul li .toggle.selected svg{
+  stroke: #FFF;
+  transform: translateY(-10px);
+}
+
+.preview-cart ul.container-controls {
+    width: 200px;
+    margin: 0 auto;
+    padding: 25px 0px 0px 0px;
+}
+
+.preview-cart ul.container-controls li {
+  width: 60px;
+  display: inline-block;
+}
+
+.preview-cart ul.object-controls{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0px;
+}
+
+.preview-cart ul.object-controls li{
+    width:50%;
+    text-align:center;
+    padding: 5px 0px;
+ }
+ 
+.preview-cart ul.object-controls a.object > p{
+margin: 0px;
+}
+
+.preview-cart ul.create-objects{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0px;
+}
+
+.preview-cart ul.create-objects li{
+width: 50%;
+padding: 10px 0px;
+}
+
+.preview-cart-wrapper {
+    display: flex;
+}
+.preview-cart-wrapper .preview-cart {
+    width: 22%;
+}
+.preview-cart-wrapper canvas {
+    width: 78%;
+}/* End custom CSS */
