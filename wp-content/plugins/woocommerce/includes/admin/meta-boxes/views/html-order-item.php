@@ -10,6 +10,13 @@
 defined( 'ABSPATH' ) || exit;
 
 $product      = $item->get_product();
+
+$optionProduct=$product->get_attributes('isoptionproduct');
+if(!empty($optionProduct)){
+	$productDesign = WP_User::get_data_by('id', wp_get_current_user()->data->ID)->product_design_json;
+	$designDescription=json_decode(json_decode($productDesign,true),true);
+
+}
 $product_link = $product ? admin_url( 'post.php?post=' . $item->get_product_id() . '&action=edit' ) : '';
 $thumbnail    = $product ? apply_filters( 'woocommerce_admin_order_item_thumbnail', $product->get_image( 'thumbnail', array( 'title' => '' ), false ), $item_id, $item ) : '';
 $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empty( $class ) ? $class : '', $item, $order );
@@ -43,6 +50,13 @@ $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empt
 		<?php do_action( 'woocommerce_before_order_itemmeta', $item_id, $item, $product ); ?>
 		<?php require 'html-order-item-meta.php'; ?>
 		<?php do_action( 'woocommerce_after_order_itemmeta', $item_id, $item, $product ); ?>
+		<?php
+		if(!empty($designDescription)){
+					foreach( $designDescription as $key => $value){
+		    !empty($value['texture']['nameMaterial']) ? print_r(ucfirst($value['type']).": ".$value['texture']['nameMaterial']):print_r(ucfirst($value['type']).": Default"."<br>");
+			}
+		}
+		?>
 	</td>
 
 	<?php do_action( 'woocommerce_admin_order_item_values', $product, $item, absint( $item_id ) ); ?>
