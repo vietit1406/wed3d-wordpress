@@ -76,7 +76,16 @@ do_action( 'woocommerce_before_cart' ); ?>
 						<td class="product-name" data-title="<?php esc_attr_e( 'Product', 'auros' ); ?>">
 						<?php
 						if ( ! $product_permalink ) {
-							echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;' );
+							$terms = get_the_terms( $product_id, 'product_cat' );
+							foreach ($terms as $term) {
+							   $product_cat = $term->name;
+							}
+							if($product_cat === "Hidden") {
+								$product_custom_link = get_site_url().'/your-custom-product';
+								echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s" data-id-product="%s" data-id-user="%s">%s</a>', esc_url( $product_custom_link ), $product_id, get_current_user_id(), $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;' );
+							} else {
+								echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;' );
+							}
 						} else {
 							echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key ) );
 						}

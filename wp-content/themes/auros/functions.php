@@ -71,7 +71,6 @@ add_filter('upload_mimes', 'custom_upload_mimes');
 add_action( 'wp_enqueue_scripts', 'add_scripts' );
 function add_scripts() {
     wp_enqueue_script( 'three', get_theme_file_uri( 'assets/js/three.js' ), array(), '20201005', true );
-    wp_enqueue_script( 'three', get_theme_file_uri( 'assets/js/three.js' ), array(), '20201005', true );
     wp_enqueue_script( 'GLTFLoader', get_theme_file_uri( 'assets/js/GLTFLoader.js' ), array(), '20201005', true );
     wp_enqueue_script('TDSLoader', get_theme_file_uri('assets/js/TDSLoader.js'), array(), '20201005', true);
     wp_enqueue_script( 'gsap', get_theme_file_uri( 'assets/js/gsap.min.js' ), array(), '20201005', true );
@@ -129,4 +128,21 @@ function post_user_product_design_json_api()
     }
         echo json_encode(array('status' => 1, 'msg' => "Success"));
     exit;
+}
+
+
+
+add_filter('woocommerce_get_price_html', 'fbs_woocommerce_get_price_html', 100, 2);
+ 
+function fbs_woocommerce_get_price_html($price, $product)
+{
+    if ($product->price <= 0)
+    {
+        //remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10);
+        //remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30);
+        return 'Call for Price';
+    } else
+    {
+        return $price;
+    }
 }
