@@ -1463,13 +1463,16 @@ function wc_get_gallery_image_html( $attachment_id = null, $main_image = false ,
     if(!empty($model3DUrl)){
 //        
     	$path3ds = glob("public/uploads/unzip_3ds_file/".$model3DUrl['id']."/".$model3DUrl['name']."/*.3ds")[0];
-        return ' <div>
-                      <a id="3dChangeBackgroundColor" href="#">Change Background Color</a>
-                 </div>
-                 <div class="info__message">
-		            <span><strong>&nbsp;Grab&nbsp;</strong> to rotate object. <strong>&nbsp;Scroll&nbsp;</strong> to zoom. <strong>&nbsp;Drag&nbsp;</strong> to move camera.</span>
-		        </div>
-                 <div style="height: 0;display:none;">
+        return '
+		        <div class="options" style="display:flex; position: relative;">
+				    <div class="option --is-active" data-option="legs">
+				        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/legs.svg" alt=""/>
+				    </div>
+				    <div class="option" data-option="cushions">
+				        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/cushions.svg" alt=""/>
+				    </div>
+				</div>
+                 <div>
                       <br>
                       <div class="controls"><div id="js-tray" class="tray"><div id="js-tray-slide" class="tray__slide"></div></div></div>
                  </div>

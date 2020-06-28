@@ -1,35 +1,40 @@
 jQuery(document).ready(function ($) {
     if($('.woocommerce-product-gallery').length) {
+        $('body').find('form.cart').append('<input style="display: none;" type="text" id="productDesign" name="product_design" value=""/>');
         var theModel;
-
+        var objectsDrag=[];
+        raycaster = new THREE.Raycaster();
+        var materialJSON=[];
+        var activeOption = 'base';
+        var part = 1;
         //Configure 3D model
         const TRAY = document.getElementById('js-tray-slide');
         const colors = [
             {
-                texture: 'http://web3d-wordpress.com/public/materials/denim_.jpg',
+                texture: '../../../../../public/materials/denim_.jpg',
                 size: [1, 1, 1],
                 shininess: 60
             },
 
             {
-                texture: 'http://web3d-wordpress.com/public/materials/fabric_.jpg',
+                texture: '../../../../../public/materials/fabric_.jpg',
                 size: [1, 1, 1],
                 shininess: 0
             },
 
             {
-                texture: 'http://web3d-wordpress.com/public/materials/pattern_.jpg',
+                texture: '../../../../../public/materials/pattern_.jpg',
                 size: [1, 1, 1],
                 shininess: 10
             },
 
             {
-                texture: 'http://web3d-wordpress.com/public/materials/quilt_.jpg',
+                texture: '../../../../../public/materials/quilt_.jpg',
                 size: [1, 1, 1],
                 shininess: 0
             },
             {
-                texture: 'http://web3d-wordpress.com/public/materials/wood_.jpg',
+                texture: '../../../../../public/materials/wood_.jpg',
                 size: [1, 1, 1],
                 shininess: 0
             },
@@ -93,27 +98,67 @@ jQuery(document).ready(function ($) {
                     map: txt,
                     shininess: color.shininess ? color.shininess : 10,
                 });
+                if(part == 1) {
+
+                    new_mtl = new THREE.MeshPhongMaterial({
+                    map: txt,
+                    shininess: color.shininess ? color.shininess : 10,
+                    name:'part'
+
+                    });
+                } else {
+                    new_mtl = new THREE.MeshPhongMaterial({
+                    map: txt,
+                    shininess: color.shininess ? color.shininess : 10,
+                    name:'base'})
+                }
+                // console.log(new_mtl);
             } else {
-                new_mtl = new THREE.MeshPhongMaterial({
-                    color: parseInt('0x' + color.color),
-                    shininess: color.shininess ? color.shininess : 10
-
-                });
+                console.log(part+"asd");
+                if(part == 1) {
+                    new_mtl = new THREE.MeshPhongMaterial({
+                        color: parseInt('0x' + color.color),
+                        shininess: color.shininess ? color.shininess : 10,
+                        name:'part'
+                    });
+                } else {
+                    new_mtl = new THREE.MeshPhongMaterial({
+                        color: parseInt('0x' + color.color),
+                        shininess: color.shininess ? color.shininess : 10,
+                        name:'base'
+                    });
+                }
+                
             }
-
+            pushToMaterialJSON(activeOption,color);
             setMaterial(theModel, new_mtl);
+            $('#productDesign').attr('value', JSON.stringify(materialJSON) );
         }
+
 
         function setMaterial(parent, mtl) {
             parent.traverse((o) => {
-                if (o.isMesh != null) {
-                    o.material = mtl;
+                // if(o.material.name){
+                //     console.log(o.material.type);
+                // }
+                if (o.isMesh != null ) {
+                    console.log(o.material)
+                    if((o.material.name.indexOf('COL') && part == -1 )|| o.material.name == "part"){
+                            o.material = mtl;
+                    }
+
+                    if ((o.material.name.indexOf('COL') != -1 || !o.material.name) && part == 1 || o.material.name == "base" ) {
+                        // console.log('1 ne');
+                        o.material = mtl;
+                        o.material = mtl;
+                    }
                 }
             });
         }
 
         function setOpacity(object, opacity) {
             object.children.forEach((child) => {
+                console.log(child);
                 setOpacity(child, opacity);
             });
             if (object.material) {
@@ -275,6 +320,8 @@ jQuery(document).ready(function ($) {
             loader.setResourcePath(url3DDirPath + '/');
             loader.load(url3D, function (object) {
                 theModel = object;
+                // console.log(theModel.children);
+
                 object.rotation.x -= Math.PI / 2;
                 // object.rotation.setFromRotationMatrix(object.matrix);
                 object.position.set(0, 0, 0); //X, Y , Z
@@ -292,8 +339,10 @@ jQuery(document).ready(function ($) {
                 // //         // child.material = chairNormalMaterial;
                 //     }
                 // });
-                setOpacity(object, 1);
+
                 scene.add(object);
+                setOpacity(object, 1);
+
             });
 
 
@@ -318,6 +367,44 @@ jQuery(document).ready(function ($) {
             });
             $('.flex-viewport').css('height', 'auto');
         }, 500);
+    }
+
+    if($('.woocommerce-product-gallery').length) {
+
+        // Select Option
+        const options = document.querySelectorAll(".option");
+        
+        for (const option of options) {
+          option.addEventListener('click',selectOption);
+        }
+        
+        function selectOption(e) {
+          let option = e.target;
+          activeOption = e.target.dataset.option;
+          for (const otherOption of options) {
+            otherOption.classList.remove('--is-active');
+          }
+          option.classList.add('--is-active');
+          console.log(part);
+          if(part == 1) {
+            part = -1
+          } else {
+            part = 1
+          } 
+          console.log(part);
+        }
+    };
+
+    function pushToMaterialJSON(type,color){
+      console.log(color);
+       materialJSON = materialJSON.filter((obj) => {
+          return obj.type != type
+      });
+      if(color){
+          materialJSON.push({"type":type,"texture":color});
+      }
+      console.log(materialJSON);
+
     }
 //
 });

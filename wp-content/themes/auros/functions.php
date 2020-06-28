@@ -146,3 +146,94 @@ function fbs_woocommerce_get_price_html($price, $product)
         return $price;
     }
 }
+
+//add_action('woocommerce_add_to_cart', function () {
+//    // your code
+//    global $woocommerce;
+//
+//    $product_id = $_POST['assessories'];
+//    $found = false;
+//
+//    //check if product already in cart
+//    if ( sizeof( WC()->cart->get_cart() ) > 0 ) {
+//        foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
+//            $_product = $values['data'];
+//            if ( $_product->id == $product_id )
+//                $found = true;
+//        }
+//        // if product not found, add it
+//        if ( ! $found )
+//            WC()->cart->add_to_cart( $product_id );
+//    } else {
+//        // if no products in cart, add it
+//        WC()->cart->add_to_cart( $product_id );
+//    }
+//}, 10, 1);
+
+
+function namespace_force_individual_cart_items( $cart_item_data, $product_id ) {
+    $product_design_json=$_POST['product_design'];
+    if(!empty($product_design_json)){ //Check Flat Design product
+        $unique_cart_item_key = md5( microtime() . rand() );
+        $cart_item_data['unique_key'] = $unique_cart_item_key;
+        $cart_item_data[$unique_cart_item_key] = 'asdasd';
+        $cart_item_data['product_design'] = $product_design_json;
+    }
+    return $cart_item_data;
+}
+add_filter( 'woocommerce_add_cart_item_data', 'namespace_force_individual_cart_items', 10, 2 );
+
+add_action( 'woocommerce_before_calculate_totals', 'misha_recalc_price' );
+
+function misha_recalc_price( $cart_object ) {
+    foreach ( $cart_object->get_cart() as $hash => $value ) {
+// Check design product
+        if(!empty($value['product_design'])){
+            $value['data']->set_price( 0 );
+        }
+    }
+}
+
+add_action('woocommerce_checkout_update_order_meta', 'custom_meta_to_order', 20, 1);
+function custom_meta_to_order( $order_id ) {
+    $cart=WC()->cart->get_cart();
+    // get an instance of the WC_Order object
+    $order = wc_get_order( $order_id );
+    foreach($cart as $key => $value){
+
+        if(!empty($value['product_design'])){
+            $order->update_meta_data($value['unique_key'], $value['product_design']);
+        }
+    }
+    // Save the order data and meta data
+    $order->save();
+}
+add_action( 'woocommerce_new_order_item', 'wc_order_item_added',  1, 3 );
+function wc_order_item_added( $item_id, $item, $order_id){
+    $order = wc_get_order( $order_id );
+    $cart=WC()->cart->get_cart();
+    global $wpdb;
+    $start=1;
+    $lengthFor=count($order->get_items());
+    foreach($cart as $key => $value){
+        if($start == $lengthFor){
+            if(!empty($value['product_design'])){
+                $sql = "UPDATE wp_woocommerce_order_items SET product_design_json='".$value['product_design']."'"." WHERE order_item_id=".$item_id;
+            }
+            if(!empty($sql)){
+                $results = $wpdb->get_results($sql);
+            }
+//        return empty($results) ? false:true;
+        }
+        $start++;
+    }
+    return true;
+
+}
+
+
+//add_action('wp_enqueue_scripts', 'override_woo_frontend_scripts');
+//function override_woo_frontend_scripts() {
+//    wp_deregister_script('wc-add-to-cart');
+//    wp_enqueue_script('wc-add-to-cart', get_template_directory_uri() . '/assets/js/add-to-cart.js', array('jquery', 'woocommerce', 'wc-country-select', 'wc-address-i18n'), null, true);
+//}
