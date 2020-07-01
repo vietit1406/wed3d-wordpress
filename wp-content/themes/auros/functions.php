@@ -105,11 +105,9 @@ function add_custom_user_field() {
     $userData = WP_User::get_data_by('id', wp_get_current_user()->data->ID);
     return $userData->product_design_json;
 }
-
 function post_user_product_design_json_api()
 {
     try{
-
 //Prepare params
         if(!empty($_POST['product_design_json']) AND !empty($_POST['user_id'])){
             $productDesignJson = json_encode($_POST['product_design_json']);
@@ -117,7 +115,6 @@ function post_user_product_design_json_api()
         }else{
             throw new Exception('Invalid input params');
         }
-
 //Excute query
         global $wpdb;
         $sql = "UPDATE wp_users SET product_design_json='".$productDesignJson."'"." WHERE id=".$userId;
@@ -130,10 +127,7 @@ function post_user_product_design_json_api()
     exit;
 }
 
-
-
 add_filter('woocommerce_get_price_html', 'fbs_woocommerce_get_price_html', 100, 2);
- 
 function fbs_woocommerce_get_price_html($price, $product)
 {
     if ($product->price <= 0)
@@ -147,44 +141,19 @@ function fbs_woocommerce_get_price_html($price, $product)
     }
 }
 
-//add_action('woocommerce_add_to_cart', function () {
-//    // your code
-//    global $woocommerce;
-//
-//    $product_id = $_POST['assessories'];
-//    $found = false;
-//
-//    //check if product already in cart
-//    if ( sizeof( WC()->cart->get_cart() ) > 0 ) {
-//        foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
-//            $_product = $values['data'];
-//            if ( $_product->id == $product_id )
-//                $found = true;
-//        }
-//        // if product not found, add it
-//        if ( ! $found )
-//            WC()->cart->add_to_cart( $product_id );
-//    } else {
-//        // if no products in cart, add it
-//        WC()->cart->add_to_cart( $product_id );
-//    }
-//}, 10, 1);
-
-
+add_filter( 'woocommerce_add_cart_item_data', 'namespace_force_individual_cart_items', 10, 2 );
 function namespace_force_individual_cart_items( $cart_item_data, $product_id ) {
     $product_design_json=$_POST['product_design'];
     if(!empty($product_design_json)){ //Check Flat Design product
         $unique_cart_item_key = md5( microtime() . rand() );
         $cart_item_data['unique_key'] = $unique_cart_item_key;
-        $cart_item_data[$unique_cart_item_key] = 'asdasd';
+        $cart_item_data[$unique_cart_item_key] = $product_design_json;
         $cart_item_data['product_design'] = $product_design_json;
     }
     return $cart_item_data;
 }
-add_filter( 'woocommerce_add_cart_item_data', 'namespace_force_individual_cart_items', 10, 2 );
 
 add_action( 'woocommerce_before_calculate_totals', 'misha_recalc_price' );
-
 function misha_recalc_price( $cart_object ) {
     foreach ( $cart_object->get_cart() as $hash => $value ) {
 // Check design product
@@ -199,6 +168,7 @@ function custom_meta_to_order( $order_id ) {
     $cart=WC()->cart->get_cart();
     // get an instance of the WC_Order object
     $order = wc_get_order( $order_id );
+
     foreach($cart as $key => $value){
 
         if(!empty($value['product_design'])){
@@ -208,6 +178,7 @@ function custom_meta_to_order( $order_id ) {
     // Save the order data and meta data
     $order->save();
 }
+
 add_action( 'woocommerce_new_order_item', 'wc_order_item_added',  1, 3 );
 function wc_order_item_added( $item_id, $item, $order_id){
     $order = wc_get_order( $order_id );
@@ -217,23 +188,72 @@ function wc_order_item_added( $item_id, $item, $order_id){
     $lengthFor=count($order->get_items());
     foreach($cart as $key => $value){
         if($start == $lengthFor){
+
             if(!empty($value['product_design'])){
                 $sql = "UPDATE wp_woocommerce_order_items SET product_design_json='".$value['product_design']."'"." WHERE order_item_id=".$item_id;
             }
             if(!empty($sql)){
                 $results = $wpdb->get_results($sql);
             }
-//        return empty($results) ? false:true;
         }
         $start++;
     }
     return true;
-
 }
 
 
-//add_action('wp_enqueue_scripts', 'override_woo_frontend_scripts');
-//function override_woo_frontend_scripts() {
-//    wp_deregister_script('wc-add-to-cart');
-//    wp_enqueue_script('wc-add-to-cart', get_template_directory_uri() . '/assets/js/add-to-cart.js', array('jquery', 'woocommerce', 'wc-country-select', 'wc-address-i18n'), null, true);
-//}
+
+
+add_action( 'woocommerce_before_single_product_summary' , 'show_custom_text', 5 );
+
+function show_custom_text() {
+    global $wpdb;
+    $cart=WC()->cart->get_cart();
+
+    $unique_key=$_GET['cart_unique_item'];
+    $item_id=$_GET['order_id_item'];
+    $sql = "SELECT product_design_json FROM wp_woocommerce_order_items WHERE order_item_id=".$item_id;
+    $productDesignOnOrder = $wpdb->get_results($sql)[0]->product_design_json;
+    if(!empty($productDesignOnOrder)){
+        $a= json_decode(stripslashes($productDesignOnOrder));
+        echo "<input style='display: none;' type='text' id='product_design_data' name='product_design_data' value='".json_encode($a)."''>";
+    }else{
+        foreach ( $cart as $cart_item_key => $cart_item ) {
+            if($cart_item['unique_key'] == $unique_key){
+                $a= json_decode(stripslashes($cart_item['product_design']));
+                if(!empty($cart_item['product_design'])){
+                    echo "<input style='display: none;' type='text' id='product_design_data' name='product_design_data' value='".json_encode($a)."''>";
+                }
+            }
+        }
+    }
+}
+
+function my_early_id() {
+    global $wpdb;
+    $post = get_post();
+    $item_id=$_GET['order_id_item'];
+    $sql = "SELECT product_design_json FROM wp_woocommerce_order_items WHERE order_item_id=".$item_id;
+    $productDesignOnOrder = $wpdb->get_results($sql)[0]->product_design_json;
+    if(!empty($productDesignOnOrder)){
+        $a= json_decode(stripslashes($productDesignOnOrder));
+        echo "<input style='display: none;' type='text' id='product_design_data' name='product_design_data' value='".json_encode($a)."''>";
+
+    }elseif(!empty($cart=WC()->cart)){
+        $cart=WC()->cart->get_cart();
+        $unique_key=$_GET['cart_unique_item'];
+        foreach ( $cart as $cart_item_key => $cart_item ) {
+            if($cart_item['unique_key'] == $unique_key){
+//                echo "<pre>";
+                $a= json_decode(stripslashes($cart_item['product_design']));
+//                print_r($a);
+//                exit;
+
+                if(!empty($cart_item['product_design'])){
+                    echo "<input style='display: none;' type='text' id='product_design_data' name='product_design_data' value='".json_encode($a)."''>";
+                }
+            }
+        }
+    }
+}
+add_action( 'wp', 'my_early_id' );

@@ -54,7 +54,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<td class="item_cost" width="1%">&nbsp;</td>
 	<td class="quantity" width="1%">&nbsp;</td>
-
 	<td class="line_cost" width="1%">
 		<div class="view">
 			<?php

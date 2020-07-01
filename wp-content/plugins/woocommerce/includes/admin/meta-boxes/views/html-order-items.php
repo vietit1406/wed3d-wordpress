@@ -15,6 +15,7 @@ $discounts           = $order->get_items( 'discount' );
 $line_items_fee      = $order->get_items( 'fee' );
 $line_items_shipping = $order->get_items( 'shipping' );
 
+
 if ( wc_tax_enabled() ) {
 	$order_taxes      = $order->get_taxes();
 	$tax_classes      = WC_Tax::get_tax_classes();
@@ -57,13 +58,38 @@ if ( wc_tax_enabled() ) {
 		<tbody id="order_line_items">
 			<?php
 			foreach ( $line_items as $item_id => $item ) {
-				do_action( 'woocommerce_before_order_item_' . $item->get_type() . '_html', $item_id, $item, $order );
+                $is_visible        = $product && $product->is_visible();
+                $product_permalink = apply_filters( 'woocommerce_order_item_permalink', $is_visible ? $product->get_permalink( $item ) : '', $item, $order );
+//		echo apply_filters( 'woocommerce_order_item_name', $product_permalink ? sprintf( '<a href="%s?order_id_item='.$item_id.'">%s</a>', $product_permalink, $item->get_name() ) : $item->get_name(), $item, $is_visible ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
+                do_action( 'woocommerce_before_order_item_' . $item->get_type() . '_html', $item_id, $item, $order );
 				include 'html-order-item.php';
 
 				do_action( 'woocommerce_order_item_' . $item->get_type() . '_html', $item_id, $item, $order );
-			}
+                $sql = "SELECT product_design_json FROM wp_woocommerce_order_items WHERE order_item_id=".$item_id;
+                $productDesign = $wpdb->get_results($sql)[0]->product_design_json;
+//                $designDescription=json_decode(json_decode($productDesign,true),true);
+//toan
+                $designDescription=json_decode($productDesign,true);
+
+                if(is_array($designDescription)){
+                    echo('<td colspan="2">');
+                    echo apply_filters( 'woocommerce_order_item_name', $product_permalink ? sprintf( '<a href="%s?order_id_item='.$item_id.'">%s</a>', $product_permalink, "Preview" ) : "<a href='".get_site_url()."/product-design/?order_id_item=".$item_id."'>"."Preview"."</a>"); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo " ";
+                    if(!empty($designDescription)){
+                        foreach( $designDescription as $key => $value){
+                            echo "<b>".ucfirst($value['type'])."</b>: ".$value['texture']['nameMaterial'];
+                            echo !empty($designDescription[$key+1]) ? ", ":null;
+                        }
+                    }
+                    echo('</td>');
+                }
+
+
+            }
 			do_action( 'woocommerce_admin_order_items_after_line_items', $order->get_id() );
+
+
 			?>
 		</tbody>
 		<tbody id="order_fee_line_items">
