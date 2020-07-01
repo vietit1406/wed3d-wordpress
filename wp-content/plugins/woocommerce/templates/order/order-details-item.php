@@ -18,6 +18,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+global $wpdb;
 
 if ( ! apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
 	return;
@@ -27,11 +28,21 @@ if ( ! apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
 
 	<td class="woocommerce-table__product-name product-name">
 		<?php
+
 		$is_visible        = $product && $product->is_visible();
 		$product_permalink = apply_filters( 'woocommerce_order_item_permalink', $is_visible ? $product->get_permalink( $item ) : '', $item, $order );
-
-		echo apply_filters( 'woocommerce_order_item_name', $product_permalink ? sprintf( '<a href="%s">%s</a>', $product_permalink, $item->get_name() ) : $item->get_name(), $item, $is_visible ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
+//		echo apply_filters( 'woocommerce_order_item_name', $product_permalink ? sprintf( '<a href="%s?order_id_item='.$item_id.'">%s</a>', $product_permalink, $item->get_name() ) : $item->get_name(), $item, $is_visible ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'woocommerce_order_item_name', $product_permalink ? sprintf( '<a href="%s?order_id_item='.$item_id.'">%s</a>', $product_permalink, $item->get_name() ) : "<a href='".get_site_url()."/product-design/?order_id_item=".$item_id."'>".$item->get_name()."</a>"); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        $sql = "SELECT product_design_json FROM wp_woocommerce_order_items WHERE order_item_id=".$item_id;
+        $productDesign = $wpdb->get_results($sql)[0]->product_design_json;
+        $designDescription=json_decode($productDesign,true);
+        if(!empty($designDescription) AND is_array($designDescription)) {
+            echo "<br>";
+            foreach ($designDescription as $key => $value) {
+                echo "<b>" . ucfirst($value['type']) . "</b>: " . $value['texture']['nameMaterial'];
+                echo !empty($designDescription[$key + 1]) ? ", " : null;
+            }
+        }
 		$qty          = $item->get_quantity();
 		$refunded_qty = $order->get_qty_refunded_for_item( $item_id );
 

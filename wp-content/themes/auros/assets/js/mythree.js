@@ -4,57 +4,141 @@ jQuery(document).ready(function ($) {
         var theModel;
         var objectsDrag=[];
         raycaster = new THREE.Raycaster();
-        var materialJSON=[];
-        var activeOption = 'base';
+        if($('#product_design_data').val()){
+            var productDesignJson=JSON.parse($('#product_design_data').val())[0];
+        }
+        if(productDesignJson){
+            var materialJSON=[];
+            materialJSON.push(productDesignJson);
+        }else{
+            var materialJSON=[];
+        }
+        var activeOption = 'cushions';
         var part = 1;
         //Configure 3D model
         const TRAY = document.getElementById('js-tray-slide');
         const colors = [
             {
-                texture: '../../../../../public/materials/denim_.jpg',
-                size: [1, 1, 1],
-                shininess: 60
-            },
-
-            {
-                texture: '../../../../../public/materials/fabric_.jpg',
-                size: [1, 1, 1],
-                shininess: 0
-            },
-
-            {
-                texture: '../../../../../public/materials/pattern_.jpg',
-                size: [1, 1, 1],
-                shininess: 10
-            },
-
-            {
-                texture: '../../../../../public/materials/quilt_.jpg',
-                size: [1, 1, 1],
-                shininess: 0
+                texture: '/public/materials/wood_.jpg',
+                nameMaterial:'Wood',
+                size: [2,2,2],
+                shininess: 50
             },
             {
-                texture: '../../../../../public/materials/wood_.jpg',
-                size: [1, 1, 1],
-                shininess: 0
+                texture: '/public/materials/oak_.jpg',
+                nameMaterial:'Oak',
+                size: [2,2,2],
+                shininess: 50
             },
             {
-                color: '66533C'
+                texture: '/public/materials/wood_ash.jpg',
+                nameMaterial:'Wood Ash',
+                size: [2,2,2],
+                shininess: 50
             },
             {
-                color: '173A2F'
+                texture: '/public/materials/wood_sol.jpg',
+                nameMaterial:'Wood Sol',
+                size: [2,2,2],
+                shininess: 50
             },
             {
-                color: '153944'
+                texture: '/public/materials/wood_ven.jpg',
+                nameMaterial:'Wood Ven',
+                size: [2,2,2],
+                shininess: 50
             },
             {
-                color: '27548D'
+                texture: '/public/materials/fabric_.jpg',
+                nameMaterial:'Fabric',
+                size: [4, 4, 4],
+                shininess: 50
             },
             {
-                color: '438AAC'
+                texture: '/public/materials/pattern_.jpg',
+                nameMaterial:'Pattern',
+                size: [8, 8, 8],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/denim_.jpg',
+                nameMaterial:'Denim',
+                size: [3, 3, 3],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/quilt_.jpg',
+                nameMaterial:'Quilt',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/leather1_.jpg',
+                nameMaterial:'Leather 1',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/leather2_.jpg',
+                nameMaterial:'Leader 2',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/leather3_.jpg',
+                nameMaterial:'Leader 3',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/leather4_.jpg',
+                nameMaterial:'Leader 4',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/twill_li.jpg',
+                nameMaterial:'Twill Li',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/corrugat.jpg',
+                nameMaterial:'Corrugat',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/black_as.jpg',
+                nameMaterial:'Black As',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/credo_cr.jpg',
+                nameMaterial:'Credo',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/fibergla.jpg',
+                nameMaterial:'Fibergla',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/denim_.jpg',
+                nameMaterial:'Denim',
+                size: [6, 6, 6],
+                shininess: 50
+            },
+            {
+                texture: '/public/materials/hopsak_d.jpg',
+                nameMaterial:'Hopsak',
+                size: [6, 6, 6],
+                shininess: 50
             }
-        ];
-
+        ]
 
         // Function - Build Colors
         function buildColors(colors) {
@@ -86,7 +170,7 @@ jQuery(document).ready(function ($) {
         function selectSwatch(e) {
             let color = colors[parseInt(e.target.dataset.key)];
             let new_mtl;
-            console.log(color.texture);
+            // console.log(color.texture);
             if (color.texture) {
                 // let txt = new THREE.TextureLoader().load('http://web3d-wordpress.com/public/material/wood_as1.jpg');
                 let txt = new THREE.TextureLoader().load(color.texture);
@@ -103,31 +187,30 @@ jQuery(document).ready(function ($) {
                     new_mtl = new THREE.MeshPhongMaterial({
                     map: txt,
                     shininess: color.shininess ? color.shininess : 10,
-                    name:'part'
+                    // name:'part'
 
                     });
                 } else {
                     new_mtl = new THREE.MeshPhongMaterial({
                     map: txt,
                     shininess: color.shininess ? color.shininess : 10,
-                    name:'base'})
+                    // name:'base'
+                    })
                 }
                 // console.log(new_mtl);
             } else {
-                console.log(part+"asd");
-                if(part == 1) {
+                // console.log(part+"asd");
+                // if(part == 1) {
+                //     new_mtl = new THREE.MeshPhongMaterial({
+                //         color: parseInt('0x' + color.color),
+                //         shininess: color.shininess ? color.shininess : 10,
+                //     });
+                // } else {
                     new_mtl = new THREE.MeshPhongMaterial({
                         color: parseInt('0x' + color.color),
                         shininess: color.shininess ? color.shininess : 10,
-                        name:'part'
                     });
-                } else {
-                    new_mtl = new THREE.MeshPhongMaterial({
-                        color: parseInt('0x' + color.color),
-                        shininess: color.shininess ? color.shininess : 10,
-                        name:'base'
-                    });
-                }
+                // }
                 
             }
             pushToMaterialJSON(activeOption,color);
@@ -142,23 +225,55 @@ jQuery(document).ready(function ($) {
                 //     console.log(o.material.type);
                 // }
                 if (o.isMesh != null ) {
-                    console.log(o.material)
-                    if((o.material.name.indexOf('COL') && part == -1 )|| o.material.name == "part"){
-                            o.material = mtl;
+                    // console.log(o.material)
+                    // if((o.material.name.indexOf('COL') && part == -1 )|| o.material.name == "part"){
+                    //         o.material = mtl;
+                    // }
+                    // if(o.material.name.indexOf('wood')){
+                    //         o.material = mtl;
+                    // }
+                    // if( o.material.name.indexOf('COL') != -1 || o.material.name=='legs' ){
+                        if(o.material.name.indexOf('COL') || !o.material.name){
+                        // if(o.material.name.indexOf('COL')){
+                    // if(o.material.name=='legs' ){
+                        o.material = mtl;
                     }
 
-                    if ((o.material.name.indexOf('COL') != -1 || !o.material.name) && part == 1 || o.material.name == "base" ) {
-                        // console.log('1 ne');
-                        o.material = mtl;
-                        o.material = mtl;
-                    }
                 }
             });
+        }
+        function setMaterialWithProductDesign(type,texture){
+            let new_mtl;
+
+            if (texture.texture) {
+                let txt = new THREE.TextureLoader().load(texture.texture);
+                txt.repeat.set( texture.size[0], texture.size[1], texture.size[2]);
+                txt.wrapS = THREE.RepeatWrapping;
+                txt.wrapT = THREE.RepeatWrapping;
+
+                new_mtl = new THREE.MeshPhongMaterial( {
+                    map: txt,
+                    shininess: texture.shininess ? texture.shininess : 10
+                });
+            }
+            else
+            {
+                new_mtl = new THREE.MeshPhongMaterial({
+                    color: parseInt('0x' + texture.color),
+                    shininess: texture.shininess ? texture.shininess : 10
+
+                });
+            }
+            debugger;
+            console.log(texture);
+            // pushToMaterialJSON(type,texture);
+            color=null;
+            setMaterial(theModel, new_mtl);
         }
 
         function setOpacity(object, opacity) {
             object.children.forEach((child) => {
-                console.log(child);
+                // console.log(child);
                 setOpacity(child, opacity);
             });
             if (object.material) {
@@ -341,6 +456,14 @@ jQuery(document).ready(function ($) {
                 // });
 
                 scene.add(object);
+                if(productDesignJson){
+                    // $.each(productDesignJson, function( key,objTexture ) {
+                    //     console.log(objTexture);
+                    //     setMaterialWithProductDesign(objTexture.type,objTexture.texture);
+                    // });
+                    setMaterialWithProductDesign(productDesignJson.type,productDesignJson.texture);
+
+                }
                 setOpacity(object, 1);
 
             });
@@ -397,13 +520,17 @@ jQuery(document).ready(function ($) {
 
     function pushToMaterialJSON(type,color){
       console.log(color);
-       materialJSON = materialJSON.filter((obj) => {
-          return obj.type != type
-      });
-      if(color){
-          materialJSON.push({"type":type,"texture":color});
+      if(materialJSON.length){
+          materialJSON = materialJSON.filter((obj) => {
+              return obj.type != type
+          });
       }
-      console.log(materialJSON);
+
+      // if(color){
+        debugger;
+          materialJSON.push({ "type":type,"texture":color });
+      // }
+      // console.log(materialJSON);
 
     }
 //

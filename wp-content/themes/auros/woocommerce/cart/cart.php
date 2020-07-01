@@ -40,7 +40,8 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 			<?php
 			foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-				$_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+
+                $_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 				$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
 				if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
@@ -76,20 +77,38 @@ do_action( 'woocommerce_before_cart' ); ?>
 						<td class="product-name" data-title="<?php esc_attr_e( 'Product', 'auros' ); ?>">
 						<?php
 						if ( ! $product_permalink ) {
-							$terms = get_the_terms( $product_id, 'product_cat' );
-							foreach ($terms as $term) {
-							   $product_cat = $term->name;
-							}
-							if($product_cat === "Hidden") {
-								$product_custom_link = get_site_url().'/your-custom-product';
-								echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s" data-id-product="%s" data-id-user="%s">%s</a>', esc_url( $product_custom_link ), $product_id, get_current_user_id(), $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;' );
-							} else {
-								echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;' );
-							}
-						} else {
-							echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key ) );
+                            if($cart_item['product_id'] == 5438 && false){
+                                $product_custom_link = get_site_url().'/your-custom-product';
+                                echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s" data-id-product="%s" data-id-user="%s">%s</a>', esc_url( $product_custom_link ), $product_id, get_current_user_id(), $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;' );
+                            }else{
+                                $terms = get_the_terms( $product_id, 'product_cat' );
+                                foreach ($terms as $term) {
+                                   $product_cat = $term->name;
+                                }
+                                if($product_cat === "Hidden") {
+                                    $product_custom_link = get_site_url().'/your-custom-product';
+                                    echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( "<a href='%s?cart_unique_item=".$cart_item['unique_key']."' data-id-product='%s' data-id-user='%s'>%s</a>", esc_url( $product_custom_link ), $product_id, get_current_user_id(), $_product->get_name(), $cart_item, $cart_item_key ) ) . '&nbsp;' );
+                                } else {
+                                    echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;' );
+                                }
+                            }
+                        } else {
+						    if(!empty($cart_item['unique_key'])){
+                                echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s?cart_unique_item='.$cart_item['unique_key'].' ">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key ) );
+                            }else{
+                                echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key ) );
+                            }
 						}
-
+                        if(!empty($cart_item['product_design'])) {
+                            $designDescription=json_decode(stripslashes($cart_item['product_design']),true);
+                            if(!empty($designDescription) AND is_array($designDescription)){
+                                echo "<br>";
+                                foreach ($designDescription as $key => $value) {
+                                    echo "<b>" . ucfirst($value['type']) . "</b>: " . $value['texture']['nameMaterial'];
+                                    echo !empty($designDescription[$key + 1]) ? ", " : null;
+                                }
+                            }
+                        }
 						do_action( 'woocommerce_after_cart_item_name', $cart_item, $cart_item_key );
 
 						// Meta data.

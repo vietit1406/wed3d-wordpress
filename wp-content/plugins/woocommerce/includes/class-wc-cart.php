@@ -1017,6 +1017,9 @@ class WC_Cart extends WC_Legacy_Cart {
 			}
 
 			$product_data = wc_get_product( $variation_id ? $variation_id : $product_id );
+//			echo "<pre>";
+//			$product_data->set_name("toan");
+//			print_r($product_data->get_changes());
 			$quantity     = apply_filters( 'woocommerce_add_to_cart_quantity', $quantity, $product_id );
 
 			if ( $quantity <= 0 || ! $product_data || 'trash' === $product_data->get_status() ) {

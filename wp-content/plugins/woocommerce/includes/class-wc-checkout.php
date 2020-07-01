@@ -1113,8 +1113,10 @@ class WC_Checkout {
 			}
 
 			if ( empty( $posted_data['woocommerce_checkout_update_totals'] ) && 0 === wc_notice_count( 'error' ) ) {
+
 				$this->process_customer( $posted_data );
 				$order_id = $this->create_order( $posted_data );
+
 				$order    = wc_get_order( $order_id );
 
 				if ( is_wp_error( $order_id ) ) {
@@ -1126,6 +1128,7 @@ class WC_Checkout {
 				}
 
 				do_action( 'woocommerce_checkout_order_processed', $order_id, $posted_data, $order );
+
 
 				if ( WC()->cart->needs_payment() ) {
 					$this->process_order_payment( $order_id, $posted_data['payment_method'] );
